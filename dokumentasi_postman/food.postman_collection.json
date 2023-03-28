@@ -1,0 +1,128 @@
+{
+	"info": {
+		"_postman_id": "8e0fd1aa-c806-4d05-90c5-1895d85329f3",
+		"name": "food",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Choice food",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nama_resep\": \"nasi goreng\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/choice",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"choice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Food list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/food",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"food"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add recipe",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 4,\r\n    \"gambar\": \"batagor\",\r\n    \"nama_resep\": \"batgor\",\r\n    \"resep\": \"baso, tahu, goreng\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/insert",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"insert"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update recipe",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"gambar\": \"batagor\",\r\n    \"nama_resep\": \"batgor\",\r\n    \"resep\": \"baso, tahu, goreng\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/update/3",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"update",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete recipe",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/destroy/3",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"destroy",
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
