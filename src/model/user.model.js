@@ -2,8 +2,8 @@ const db = require("../config/database");
 
 const userModel = {
   // sql register
-  registerUser: ({ id, name, email, phone, password }) => {
-    const sql = `INSERT INTO login (id, name, email, phone, password) VALUES (${id}, '${name}','${email}','${phone}','${password}')`;
+  registerUser: ({ id, name, email, phone, password, level }) => {
+    const sql = `INSERT INTO login (id, name, email, phone, password, level) VALUES (${id},'${name}','${email}','${phone}','${password}', ${level})`;
     return new Promise((resolve, reject) => {
       db.query(sql, (err, result) => {
         if (err) {
@@ -14,8 +14,8 @@ const userModel = {
     });
   },
   // sql login
-  loginUser: ({ email, password }) => {
-    const sql = `SELECT * FROM login WHERE email = '${email}' AND password = '${password}' `;
+  loginUser: ({ email }) => {
+    const sql = `SELECT * FROM login WHERE email = '${email}'`;
     return new Promise((resolve, reject) => {
       db.query(sql, (err, result) => {
         if (err) {

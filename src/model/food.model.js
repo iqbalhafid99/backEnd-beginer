@@ -14,8 +14,8 @@ const foodModel = {
   },
 
   //   sql to insert recipe
-  insertRecipe: ({ id, gambar, nama_resep, resep }) => {
-    const sql = `INSERT INTO resep (id, gambar, nama_resep, resep) VALUES (${id},'${gambar}','${nama_resep}','${resep}')`;
+  insertRecipe: ({ id, video, nama_resep, resep, image }) => {
+    const sql = `INSERT INTO resep (id, video, nama_resep, resep, image) VALUES (${id},'${video}','${nama_resep}','${resep}','${image}')`;
     return new Promise((resolve, reject) => {
       db.query(sql, (err, result) => {
         if (err) {
@@ -39,8 +39,8 @@ const foodModel = {
   },
 
   // sql update recipe
-  updateData: ({ id, gambar, nama_resep, resep }) => {
-    const sql = `UPDATE resep SET gambar='${gambar}', nama_resep='${nama_resep}', resep='${resep}' WHERE id=${id}`;
+  updateData: ({ id, video, nama_resep, resep }) => {
+    const sql = `UPDATE resep SET video='${video}', nama_resep='${nama_resep}', resep='${resep}' WHERE id=${id}`;
     return new Promise((resolve, reject) => {
       db.query(sql, (err, result) => {
         if (err) {
@@ -56,6 +56,29 @@ const foodModel = {
     const sql = `DELETE FROM resep WHERE id=${id}`;
     return new Promise((resolve, reject) => {
       db.query(sql, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+  },
+  // pagination
+  paginate: (limit, offset) => {
+    const sql = `SELECT * FROM resep LIMIT ${limit} OFFSET ${offset}`;
+    return new Promise((resolve, reject) => {
+      db.query(sql, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+  },
+  //  redis
+  selectByID: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM resep WHERE id=${id}`, (err, result) => {
         if (err) {
           reject(err);
         }
