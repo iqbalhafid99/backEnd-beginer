@@ -9,6 +9,8 @@ const {
   destroyRecipe,
   paginate,
   getByID,
+  searchFood,
+  sortFood,
 } = require("../controller/food.controller");
 // path login
 const {
@@ -16,6 +18,7 @@ const {
   insertLogin,
   destroyUser,
   updateUser,
+  listUser,
 } = require("../controller/user.controller");
 
 // path redis
@@ -33,7 +36,7 @@ const { isCustomer } = require("../middleware/authorization");
 const upload = require("../middleware/upload");
 
 // register
-router.post("/register", validate(register), insertRegister);
+router.post("/register", insertRegister);
 // login
 router.post("/login", insertLogin);
 // choice food with name
@@ -41,7 +44,9 @@ router.post("/choice", insertFood);
 // insert recipe
 router.post("/insert", upload, insertRecipe);
 // food list
-router.get("/food", auth, isCustomer, listFood);
+router.get("/food", listFood);
+// food list
+router.get("/user", listUser);
 // food list pagination
 router.get("/pagination", paginate);
 // update recipe
@@ -52,9 +57,13 @@ router.put("/updateuser/:id", updateUser);
 router.delete("/destroy/:id", destroyRecipe);
 // delete USER
 router.delete("/login/:id", destroyUser);
+// search food
+router.get("/foods/search", searchFood);
+// sorting food ascending or descending
+router.get("/foods/sort", sortFood);
 
 // router redis
-router.get("/v1/getFromRedis/:id", hitProduct, getByID);
+router.get("/food/:id", getByID);
 
 // router.get("/list", list);
 module.exports = router;

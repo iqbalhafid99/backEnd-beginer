@@ -35,10 +35,9 @@ const foodController = {
 
   //   new recipe
   insertRecipe: (req, res) => {
-    const { id, video, nama_resep, resep } = req.body;
-    const image = req.file.path;
+    const { video, nama_resep, resep } = req.body;
+    const image = req.file.filename;
     const data = {
-      id,
       video,
       nama_resep,
       resep,
@@ -125,23 +124,69 @@ const foodController = {
       });
   },
 
+  // Redis
+  // getByID: (req, res) => {
+  //   const id = req.params.id;
+  //   foodModel
+  //     .selectByID(id)
+  //     .then((result) => {
+  //       const dataRedis = client.set(
+  //         `getFromRedis/${id}`,
+  //         JSON.stringify(result),
+  //         {
+  //           EX: 180,
+  //           NX: true,
+  //         }
+  //       );
+  //       res.send({
+  //         fromCache: false,
+  //         data: dataRedis,
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // },
+
+  // get by id
   getByID: (req, res) => {
     const id = req.params.id;
     foodModel
       .selectByID(id)
       .then((result) => {
-        const dataRedis = client.set(
-          `getFromRedis/${id}`,
-          JSON.stringify(result),
-          {
-            EX: 180,
-            NX: true,
-          }
-        );
-        res.send({
-          fromCache: false,
-          data: dataRedis,
-        });
+        console.log(result);
+        response(200, result.rows, "Food List!", res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
+  // search food
+  searchFood: (req, res) => {
+    const { query } = req.query;
+    const searchQuery = `%${query.toLowerCase()}%`;
+
+    foodModel
+      .searchFood(searchQuery)
+      .then((result) => {
+        response(200, result.rows, "Search Results!", res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
+
+  // sorting food by asc or desc
+  sortFood: (req, res) => {
+    let { sort } = req.query;
+    sort = sort === "desc" ? "DESC" : "ASC"; // Menentukan urutan default jika sort tidak valid
+
+    const columnName = "nama_resep";
+
+    foodModel
+      .sortFood(columnName, sort)
+      .then((result) => {
+        response(200, result.rows, "Sorted Food List!", res);
       })
       .catch((err) => {
         console.log(err);

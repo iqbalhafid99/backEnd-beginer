@@ -1,20 +1,22 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
+const xss = require("xss-clean");
+const helmet = require("helmet");
+
 const app = express();
 const port = 3000;
-const cors = require("cors");
+app.use(express.static("public"));
 
-// router
-const userRouter = require("./src/router/user.router");
-
+app.use(cors()); // Menambahkan middleware cors
 app.use(bodyParser.json());
-app.use(userRouter);
-app.use(cors());
+app.use(helmet());
+app.use(xss());
 
-// app.get("/", (req, res) => {
-//   res.send("berjalan mulus");
-// });
+// Router dan endpoint lainnya
+const userRouter = require("./src/router/user.router");
+app.use(userRouter);
 
 app.listen(port, () => {
-  console.log(`server running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });

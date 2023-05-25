@@ -1,20 +1,18 @@
 const userModel = require("../model/user.model");
 const response = require("../helper/respone");
 const bcrypt = require("bcrypt");
-const jwtTOken = require("../helper/generateSecret");
+const jwtToken = require("../helper/generateSecret");
 
 // INSERT REGISTER
 const userController = {
   insertRegister: async (req, res) => {
-    const { id, name, email, phone, password, level } = req.body;
+    const { name, email, phone, password } = req.body;
     bcrypt.hash(password, 10, (err, hash) => {
       const data = {
-        id,
         name,
         email,
         phone,
         password: hash,
-        level,
       };
       userModel
         .registerUser(data)
@@ -25,6 +23,19 @@ const userController = {
           console.log(err);
         });
     });
+  },
+
+  // GET ALL USER
+
+  listUser: (req, res) => {
+    userModel
+      .selectAll()
+      .then((result) => {
+        response(200, result.rows, "List All user", res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 
   // INSERT LOGIN
@@ -38,15 +49,19 @@ const userController = {
       .loginUser(data)
       .then((result) => {
         const userAuth = result.rows[0].level;
+        const emailAuth = result.rows[0].email;
+        const nameAuth = result.rows[0].name;
         console.log(userAuth);
         if (result.rowCount > 0) {
           bcrypt
             .compare(password, result.rows[0].password)
             .then(async (result) => {
               if (result === true) {
-                const token = await jwtTOken({
-                  username: result.rows,
+                const user = await userModel.loginUser({ email, password });
+                const token = await jwtToken({
+                  email: emailAuth,
                   level: userAuth,
+                  name: nameAuth,
                 });
                 res.json({
                   message: "berhasil login",

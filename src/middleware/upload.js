@@ -10,7 +10,7 @@ const multerUpload = multer({
     },
     filename: (req, file, cb) => {
       const ext = path.extname(file.originalname);
-      const fileName = `${Date.now()}${ext}`;
+      const fileName = `/${Date.now()}${ext}`;
       cb(null, fileName);
     },
   }),

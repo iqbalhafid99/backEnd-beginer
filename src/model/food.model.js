@@ -14,8 +14,8 @@ const foodModel = {
   },
 
   //   sql to insert recipe
-  insertRecipe: ({ id, video, nama_resep, resep, image }) => {
-    const sql = `INSERT INTO resep (id, video, nama_resep, resep, image) VALUES (${id},'${video}','${nama_resep}','${resep}','${image}')`;
+  insertRecipe: ({ video, nama_resep, resep, image }) => {
+    const sql = `INSERT INTO resep (video, nama_resep, resep, image) VALUES ('${video}','${nama_resep}','${resep}','${image}')`;
     return new Promise((resolve, reject) => {
       db.query(sql, (err, result) => {
         if (err) {
@@ -79,6 +79,32 @@ const foodModel = {
   selectByID: (id) => {
     return new Promise((resolve, reject) => {
       db.query(`SELECT * FROM resep WHERE id=${id}`, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+  },
+
+  // search menggunakan join
+  searchFood: (query) => {
+    const sql = `SELECT * FROM resep WHERE LOWER(nama_resep) LIKE $1`;
+    return new Promise((resolve, reject) => {
+      db.query(sql, [query], (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result);
+      });
+    });
+  },
+
+  // sorting asc dan desceding
+  sortFood: (nama_resep, sortOrder) => {
+    const sql = `SELECT * FROM resep ORDER BY ${nama_resep} ${sortOrder}`;
+    return new Promise((resolve, reject) => {
+      db.query(sql, (err, result) => {
         if (err) {
           reject(err);
         }
