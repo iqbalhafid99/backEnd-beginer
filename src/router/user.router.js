@@ -9,6 +9,7 @@ const {
   destroyRecipe,
   paginate,
   getByID,
+  getRecipesWithUser,
   searchFood,
   sortFood,
 } = require("../controller/food.controller");
@@ -19,6 +20,8 @@ const {
   destroyUser,
   updateUser,
   listUser,
+  addPhoto,
+  getUserFromToken,
 } = require("../controller/user.controller");
 
 // path redis
@@ -53,6 +56,8 @@ router.get("/pagination", paginate);
 router.put("/update/:id", updateRecipe);
 // update recipe
 router.put("/updateuser/:id", updateUser);
+// ganti photo profile
+router.put("/add-photo/:id", upload, addPhoto);
 // delete recipe
 router.delete("/destroy/:id", destroyRecipe);
 // delete USER
@@ -61,9 +66,12 @@ router.delete("/login/:id", destroyUser);
 router.get("/foods/search", searchFood);
 // sorting food ascending or descending
 router.get("/foods/sort", sortFood);
-
-// router redis
+// get food by id
+router.get("/food-user", getRecipesWithUser);
+// get food by id
 router.get("/food/:id", getByID);
+// get credentials with token
+router.get("/credential", getUserFromToken);
 
 // router.get("/list", list);
 module.exports = router;

@@ -2,6 +2,8 @@ const userModel = require("../model/user.model");
 const response = require("../helper/respone");
 const bcrypt = require("bcrypt");
 const jwtToken = require("../helper/generateSecret");
+const jwt = require("jsonwebtoken");
+const dataToken = process.env.JWT_SECRET;
 
 // INSERT REGISTER
 const userController = {
@@ -48,10 +50,10 @@ const userController = {
     userModel
       .loginUser(data)
       .then((result) => {
-        const userAuth = result.rows[0].level;
+        const userAuth = result.rows[0].id;
         const emailAuth = result.rows[0].email;
         const nameAuth = result.rows[0].name;
-        console.log(userAuth);
+        const imageAuth = result.rows[0].image;
         if (result.rowCount > 0) {
           bcrypt
             .compare(password, result.rows[0].password)
@@ -60,13 +62,18 @@ const userController = {
                 const user = await userModel.loginUser({ email, password });
                 const token = await jwtToken({
                   email: emailAuth,
-                  level: userAuth,
+                  id: userAuth,
                   name: nameAuth,
+                  image: imageAuth,
                 });
-                res.json({
-                  message: "berhasil login",
-                  token,
-                });
+                return res
+                  .status(200)
+                  .cookie("token", token, { httpOnly: true })
+                  .json({
+                    success: true,
+                    message: "login successful",
+                    token,
+                  });
               } else {
                 response(400, result.rowCount, "Password salah", res);
               }
@@ -107,6 +114,47 @@ const userController = {
       .update(data)
       .then((result) => {
         response(200, result.rowCount, "User Succesfully update", res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
+
+  // get credentials user profile
+  getUserFromToken: async (req, res) => {
+    try {
+      const token = req.cookies.token;
+
+      const decoded = jwt.verify(token, dataToken);
+
+      const userId = decoded.id;
+      const name = decoded.name;
+      const image = decoded.image;
+
+      return res.status(200).json({
+        success: true,
+        message: "sukses mendapatkan data",
+        userId,
+        name,
+        image,
+      });
+    } catch (err) {
+      console.log(err);
+      response(400, 0, err, res);
+    }
+  },
+
+  addPhoto: (req, res) => {
+    const image = req.file.filename;
+    const id = req.params.id;
+    const data = {
+      id,
+      image,
+    };
+    userModel
+      .addPhoto(data)
+      .then((result) => {
+        response(200, result.rowCount, "berhasil menambahkan photo", res);
       })
       .catch((err) => {
         console.log(err);
